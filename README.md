@@ -39,6 +39,32 @@ Task:
 
 - In the table above, the **Products column** contains multiple values, which violates **1NF**.
 - **Write an SQL query** to transform this table into **1NF**, ensuring that each row represents a single product for an order
+CREATE TABLE ProductDetail (
+  OrderID INT,
+  CustomerName VARCHAR(100),
+  Products VARCHAR(200)
+);
+
+INSERT INTO ProductDetail VALUES
+(101, 'John Doe',    'Laptop, Mouse'),
+(102, 'Jane Smith',  'Tablet, Keyboard, Mouse'),
+(103, 'Emily Clark',  'Phone');
+
+SELECT 
+  pd.OrderID,
+  pd.CustomerName,
+  LTRIM(RTRIM(value)) AS Product
+FROM ProductDetail pd
+CROSS APPLY STRING_SPLIT(pd.Products, ',') AS s
+;
+| OrderID | CustomerName | Product  |
+| ------- | ------------ | -------- |
+| 101     | John Doe     | Laptop   |
+| 101     | John Doe     | Mouse    |
+| 102     | Jane Smith   | Tablet   |
+| 102     | Jane Smith   | Keyboard |
+| 102     | Jane Smith   | Mouse    |
+| 103     | Emily Clark  | Phone    |
 
 --- 
 
